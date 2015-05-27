@@ -12,10 +12,10 @@
 
 @interface ImageDetailViewController() < UIScrollViewDelegate>{
    
-   UIScrollView *scrollView;
-   
 }
 
+@property ( readwrite) UIScrollView *scrollView;
+@property ( readwrite) UIView *containerImageView;
 @property ( readwrite) UIImageView *imageView;
 @property ( readwrite) ImageBean *imageBean;
 @end
@@ -47,41 +47,32 @@
    
    [self setupImageView];
    
-   [scrollView addSubview: self.imageView];
-   [self.view addSubview: scrollView];
+   [self.view addSubview: self.scrollView];
    
    [self downloadImage];
-   
    
    [self setupConstaints];
    
    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc]
-                                            initWithTarget: self
-                                            action: @selector(handleDoubleZoom)];
+                                               initWithTarget: self
+                                               action: @selector(handleDoubleZoom)];
    doubleTapGesture.numberOfTapsRequired = 2;
-   [scrollView addGestureRecognizer: doubleTapGesture];
+   [self.scrollView addGestureRecognizer: doubleTapGesture];
 }
 
-#pragma mark -
-
+#pragma mark - zoom
 -( void)handleDoubleZoom{
-   [scrollView setZoomScale: 2.0 animated: YES];
+   [self.scrollView setZoomScale: 2.0 animated: YES];
 }
 
 - (void)setupScrollView {
-   scrollView = [[UIScrollView alloc] init];
-   scrollView.translatesAutoresizingMaskIntoConstraints = false;
-   scrollView.backgroundColor = [UIColor blackColor];
+   self.scrollView = [[UIScrollView alloc] init];
+   self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+   self.scrollView.backgroundColor = [UIColor blackColor];
    
-   scrollView.delegate = self;
-   scrollView.minimumZoomScale = 1.0;
-   scrollView.maximumZoomScale = 3.0;
-}
-
-- (void)setupImageView {
-   self.imageView = [[UIImageView alloc] init];
-   self.imageView.translatesAutoresizingMaskIntoConstraints = false;
-   self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+   self.scrollView.delegate = self;
+   self.scrollView.minimumZoomScale = 1.0;
+   self.scrollView.maximumZoomScale = 3.0;
 }
 
 - (void)downloadImage {
@@ -98,6 +89,8 @@
                                         if( [downloaded.imageBean.identifier isEqualToString: strongSelf.imageBean.identifier]){
                                            //..show it
                                            strongSelf.imageView.image = downloaded.image;
+                                           [strongSelf setupImageViewContraints];
+                                           [strongSelf.view layoutIfNeeded];
                                            [HudHelper hideHudOverView: strongSelf.view];
                                         }
                                      }
@@ -106,8 +99,99 @@
                                   }];
 }
 
+
+- (void)setupImageView {
+   self.containerImageView = [[UIView alloc] initWithFrame: self.scrollView.bounds];
+   self.containerImageView.translatesAutoresizingMaskIntoConstraints = NO;
+   [self.scrollView addSubview: self.containerImageView];
+   //self.scrollView.contentSize = imageContainerView.frame.size;
+   self.imageView = [[UIImageView alloc] init];
+   //self.imageView.bounds = self.view.bounds;
+   self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+   self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+   [self.containerImageView addSubview: self.imageView];
+}
+
+
+- (void)setupImageViewContraints{
+   //image is centered in scrollView
+   NSArray *containerImageViewVerticalPositionconstraints = [NSLayoutConstraint
+                                                             constraintsWithVisualFormat: @"V:|-0-[containerImageView]-0-|"
+                                                             options:0
+                                                             metrics: nil
+                                                             views: [self viewDictionary]];
+   NSArray *containerImageViewHorizontalPositionconstraints = [NSLayoutConstraint
+                                                               constraintsWithVisualFormat: @"H:|-0-[containerImageView]-0-|"
+                                                               options:0
+                                                               metrics: nil
+                                                               views: [self viewDictionary]];
+   
+   
+   NSArray *imageViewVerticalPositionconstraints = [NSLayoutConstraint
+                                                    constraintsWithVisualFormat: @"V:|-0-[imageView]-0-|"
+                                                    options:0
+                                                    metrics: nil
+                                                    views: [self viewDictionary]];
+   /*NSArray *imageViewHorizontalPositionconstraints = [NSLayoutConstraint
+    constraintsWithVisualFormat: @"H:|-0-[imageView]-0-|"
+    options:0
+    metrics: nil
+    views: [self viewDictionary]];*/
+   NSLayoutConstraint *centerXConstraint =
+   [NSLayoutConstraint constraintWithItem:self.imageView
+                                attribute:NSLayoutAttributeCenterX
+                                relatedBy:NSLayoutRelationEqual
+                                   toItem:self.containerImageView
+                                attribute:NSLayoutAttributeCenterX
+                               multiplier:1.0
+                                 constant:0.0];
+   NSLayoutConstraint *centerYConstraint =
+   [NSLayoutConstraint constraintWithItem:self.imageView
+                                attribute:NSLayoutAttributeCenterY
+                                relatedBy:NSLayoutRelationEqual
+                                   toItem:self.containerImageView
+                                attribute:NSLayoutAttributeCenterY
+                               multiplier:1.0
+                                 constant:0.0];
+   
+   NSDictionary *metrics = @{ @"scrollViewWidth": @(self.scrollView.frame.size.width),
+                              @"scrollViewHeight": @(self.scrollView.frame.size.height)};
+   [self.containerImageView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[containerImageView(==scrollViewWidth)]"
+                                                                                   options:0
+                                                                                   metrics: metrics
+                                                                                     views: [self viewDictionary]]];
+   [self.containerImageView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[containerImageView(==scrollViewHeight)]"
+                                                                                   options:0
+                                                                                   metrics: metrics
+                                                                                     views: [self viewDictionary]]];
+   
+   [self.imageView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView(==scrollViewWidth)]"
+                                                                          options:0
+                                                                          metrics: metrics
+                                                                            views: [self viewDictionary]]];
+   
+   [self.scrollView addConstraints: containerImageViewVerticalPositionconstraints];
+   [self.scrollView addConstraints: containerImageViewHorizontalPositionconstraints];
+   
+   [self.scrollView addConstraints: imageViewVerticalPositionconstraints];
+   //[self.scrollView addConstraints: imageViewHorizontalPositionconstraints];
+   [self.containerImageView addConstraint: centerXConstraint];
+   [self.containerImageView addConstraint: centerYConstraint];
+   [self.view setNeedsLayout];
+   [self.view layoutIfNeeded];
+}
+
+- (NSDictionary *)viewDictionary {
+   NSDictionary *viewDictionary = @{ @"scrollView": self.scrollView,
+                                     @"imageView": self.imageView,
+                                     @"containerImageView":
+                                        self.containerImageView};
+   return viewDictionary;
+}
+
 - (void)setupConstaints {
-   NSDictionary *viewDictionary = @{ @"scrollView": scrollView, @"imageView": self.imageView};
+   NSDictionary *viewDictionary;
+   viewDictionary = [self viewDictionary];
    
    //scrollView occupy all view
    NSArray *scrollVerticalPositionConstraints = [NSLayoutConstraint
@@ -121,33 +205,11 @@
                                                    metrics: nil
                                                    views: viewDictionary];
    
-   //image is as width as screen
-   [self.view addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.imageView
-                             attribute:NSLayoutAttributeWidth
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:scrollView
-                             attribute:NSLayoutAttributeWidth
-                             multiplier:1.0
-                             constant:0.0]];
-   
-   //image is centered in scrollView
-   NSArray *imageViewVerticalPositionconstraints = [NSLayoutConstraint
-                                                    constraintsWithVisualFormat: @"V:|-0-[imageView]-0-|"
-                                                    options:0
-                                                    metrics: nil
-                                                    views: viewDictionary];
-   NSArray *imageViewHorizontalPositionconstraints = [NSLayoutConstraint
-                                                      constraintsWithVisualFormat: @"H:|-0-[imageView]-0-|"
-                                                      options:0
-                                                      metrics: nil
-                                                      views: viewDictionary];
-   
-   [scrollView addConstraints: imageViewVerticalPositionconstraints];
-   [scrollView addConstraints: imageViewHorizontalPositionconstraints];
    
    [self.view addConstraints: scrollVerticalPositionConstraints];
    [self.view addConstraints: scrollHorizontalPositionConstraints];
+   
+   
 }
 
 
