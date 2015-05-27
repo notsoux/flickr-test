@@ -2,7 +2,7 @@
 Test iOS app connecting to flickr to download photo with tag 'party'
 
 # Installation
-The project uses CocoaPods: after cloning, launch **pd install**
+The project uses CocoaPods: after cloning, launch **pod install** and reopen project using **flickr-test.xcworkspace**
 
 To show photo from flickr, an api key is needed: you can create one here -> https://www.flickr.com/services/apps/create/
 
