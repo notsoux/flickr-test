@@ -84,7 +84,7 @@
 - (void)setupScrollView {
    self.scrollView = [[UIScrollView alloc] init];
    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-   self.scrollView.backgroundColor = [UIColor greenColor];
+   //self.scrollView.backgroundColor = [UIColor greenColor];
    
    self.scrollView.delegate = self;
    self.scrollView.minimumZoomScale = 1.0;
@@ -126,7 +126,7 @@
    self.imageView = [[UIImageView alloc] init];
    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-   self.imageView.backgroundColor = [UIColor yellowColor];
+   //self.imageView.backgroundColor = [UIColor yellowColor];
 }
 
 /*
