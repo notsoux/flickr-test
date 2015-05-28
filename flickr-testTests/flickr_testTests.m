@@ -9,32 +9,74 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-@interface flickr_testTests : XCTestCase
+#import "FlickrProvider.h"
+
+@interface FlickrProvider( Test)
++ (NSMutableArray *)parsePhotoListFlickrResponse:(NSDictionary *)jsonDict;
+@end
+
+/*
+ expose private method for testing
+*/
+@interface flickr_testTests : XCTestCase{
+   NSDictionary *testDataDictionary;
+}
 
 @end
 
+/*
+ json parsing test
+ each json is taken from test_data.plist by using a specific test-related key
+ */
 @implementation flickr_testTests
 
+#pragma mark - util
+/*
+ utility to setup NSDictionary from test_data.plist
+ */
+-( NSDictionary *)jsonDictFromTestDataKey:( NSString *) key{
+   NSString *jsonString = testDataDictionary[ key];
+   NSData *jsonData = [jsonString dataUsingEncoding: NSUTF8StringEncoding];
+   NSError *jsonError = nil;
+   NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData: jsonData
+                                                            options: NSJSONReadingMutableContainers
+                                                              error: &jsonError];
+   return jsonDict;
+}
+
+#pragma mark - test
 - (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+   [super setUp];
+   NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+   NSString *path = [bundle pathForResource:@"test_data" ofType:@"plist"];
+   testDataDictionary = [[NSDictionary alloc] initWithContentsOfFile:path];
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+   // Put teardown code here. This method is called after the invocation of each test method in the class.
+   [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+- (void)testEmptyImageListWhenNoImagesAreReturned {
+   NSDictionary *jsonDict = [self jsonDictFromTestDataKey: @"empty_photo_list_json"];
+   NSArray *imageList = [FlickrProvider parsePhotoListFlickrResponse: jsonDict];
+   
+   XCTAssert( imageList.count == 0);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testOneImageListWhenOneImagesAreReturned {
+   NSDictionary *jsonDict = [self jsonDictFromTestDataKey: @"one_photo_list_json"];
+   NSArray *imageList = [FlickrProvider parsePhotoListFlickrResponse: jsonDict];
+   XCTAssert( imageList.count == 1);
 }
+
+
+- (void)testThirteenImagesListWhenOneImagesAreReturned {
+   NSDictionary *jsonDict = [self jsonDictFromTestDataKey: @"thirteen_photos_list_json"];
+   NSArray *imageList = [FlickrProvider parsePhotoListFlickrResponse: jsonDict];
+   XCTAssert( imageList.count == 13);
+}
+
+
 
 @end

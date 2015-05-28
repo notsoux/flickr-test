@@ -14,16 +14,22 @@
 @implementation FlickrProvider
 
 #pragma mark - protocol implementation
++ (NSArray *)parsePhotoListFlickrResponse:(NSDictionary *)jsonDict{
+   NSArray *images = jsonDict[ @"photos"][ @"photo"];
+   NSMutableArray *imageList = [[NSMutableArray alloc] init];
+   [images enumerateObjectsUsingBlock:^( NSDictionary *imageDict, NSUInteger idx, BOOL *stop) {
+      ImageBean *imageBean = [FlickrProvider imageBeanFromJson: imageDict];
+      [imageList addObject: imageBean];
+   }];
+   return [imageList copy];
+}
+
 -( void)photoListWithTag:( NSString *)tag
                   finish:(void (^)(NSArray *))finishBlock
                    error:(void (^)(NSError *))errorBlock{
    [FlickrRestApi photoListFilteredByTags: @[tag] finish:^(NSDictionary *jsonDict) {
-      NSMutableArray *imageList = [[NSMutableArray alloc] init];
-      NSArray *images = jsonDict[ @"photos"][ @"photo"];
-      [images enumerateObjectsUsingBlock:^( NSDictionary *imageDict, NSUInteger idx, BOOL *stop) {
-         ImageBean *imageBean = [FlickrProvider imageBeanFromJson: imageDict];
-         [imageList addObject: imageBean];
-      }];
+      
+      NSArray *imageList = [FlickrProvider parsePhotoListFlickrResponse:jsonDict];
       if( finishBlock != nil){
          finishBlock( imageList);
       }
