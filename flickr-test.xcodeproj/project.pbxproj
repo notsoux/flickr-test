@@ -26,6 +26,7 @@
 		3D4E017A1B14CE8A00FBF65B /* ImageBean.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E01791B14CE8A00FBF65B /* ImageBean.m */; };
 		3D4E017E1B14D24400FBF65B /* FlickrRestApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E017D1B14D24400FBF65B /* FlickrRestApi.m */; };
 		3D542ECA1B16FD45003FF9CC /* test_data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D542EC91B16FD45003FF9CC /* test_data.plist */; };
+		3DAA79D91B17031C0009705F /* ErrorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA79D81B17031C0009705F /* ErrorHelper.m */; };
 		3DBB76DE1B16307A0091538F /* ConfigurationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB76DD1B16307A0091538F /* ConfigurationHelper.m */; };
 		3DBB76E01B1631260091538F /* configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3DBB76DF1B1631260091538F /* configuration.plist */; };
 		A0FB21DB9F8E1C63923E0857 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E19B37EC31F769F40BB71939 /* libPods.a */; };
@@ -81,6 +82,8 @@
 		3D4E017C1B14D24400FBF65B /* FlickrRestApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrRestApi.h; sourceTree = "<group>"; };
 		3D4E017D1B14D24400FBF65B /* FlickrRestApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrRestApi.m; sourceTree = "<group>"; };
 		3D542EC91B16FD45003FF9CC /* test_data.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = test_data.plist; sourceTree = "<group>"; };
+		3DAA79D71B17031C0009705F /* ErrorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorHelper.h; sourceTree = "<group>"; };
+		3DAA79D81B17031C0009705F /* ErrorHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorHelper.m; sourceTree = "<group>"; };
 		3DBB76DC1B16307A0091538F /* ConfigurationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigurationHelper.h; sourceTree = "<group>"; };
 		3DBB76DD1B16307A0091538F /* ConfigurationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigurationHelper.m; sourceTree = "<group>"; };
 		3DBB76DF1B1631260091538F /* configuration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = configuration.plist; sourceTree = "<group>"; };
@@ -110,6 +113,7 @@
 		3D0C92F71B14E07B004E03A0 /* helper */ = {
 			isa = PBXGroup;
 			children = (
+				3DAA79D61B17030B0009705F /* error */,
 				3DBB76DB1B1630680091538F /* configuration */,
 				3D0C93071B14E68B004E03A0 /* net */,
 				3D0C92FF1B14E213004E03A0 /* alert */,
@@ -339,6 +343,15 @@
 			path = "rest api";
 			sourceTree = "<group>";
 		};
+		3DAA79D61B17030B0009705F /* error */ = {
+			isa = PBXGroup;
+			children = (
+				3DAA79D71B17031C0009705F /* ErrorHelper.h */,
+				3DAA79D81B17031C0009705F /* ErrorHelper.m */,
+			);
+			path = error;
+			sourceTree = "<group>";
+		};
 		3DBB76DB1B1630680091538F /* configuration */ = {
 			isa = PBXGroup;
 			children = (
@@ -514,6 +527,7 @@
 				3D0C93121B14E940004E03A0 /* ImageListDataSource.m in Sources */,
 				3D1045C81B14C35D0068B749 /* ImageListViewController.m in Sources */,
 				3D4E017A1B14CE8A00FBF65B /* ImageBean.m in Sources */,
+				3DAA79D91B17031C0009705F /* ErrorHelper.m in Sources */,
 				3D0C93161B15A678004E03A0 /* ImageDetailViewController.m in Sources */,
 				3D0C92FB1B14E07B004E03A0 /* HudHelper.m in Sources */,
 				3D0C92FE1B14E0D9004E03A0 /* PhotoProvider.m in Sources */,

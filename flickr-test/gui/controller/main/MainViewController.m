@@ -13,6 +13,7 @@
 #import "HudHelper.h"
 
 #import "AlertHelper.h"
+#import "ErrorHelper.h"
 
 @interface MainViewController(){
    
@@ -45,7 +46,7 @@
                                if( strongSelf){
                                   [HudHelper hideHudOverView: strongSelf.view];
                                   [AlertHelper showAlertWithOnlyOkUsingTitle: @"Error"
-                                                                     message: @"Unable to download photo list"];
+                                                                     message: [ErrorHelper errorMessage: error]];
                                }
                             }];
    

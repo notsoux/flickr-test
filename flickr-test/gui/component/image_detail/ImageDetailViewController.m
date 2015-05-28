@@ -9,6 +9,7 @@
 
 #import "AsynchImageDownloader.h"
 #import "HudHelper.h"
+#import "AlertHelper.h"
 
 @interface ImageDetailViewController() < UIScrollViewDelegate>{
    
@@ -95,7 +96,8 @@
                                         }
                                      }
                                   } error:^(NSError *error) {
-                                     
+                                     [AlertHelper showAlertWithOnlyOkUsingTitle: @"Error"
+                                                                        message: @"Cannot download image"];
                                   }];
 }
 

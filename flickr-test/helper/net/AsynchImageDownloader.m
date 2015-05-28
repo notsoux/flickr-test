@@ -9,6 +9,7 @@
 #import "AsynchImageDownloader.h"
 
 #import "AFNetworking.h"
+#import "ErrorHelper.h"
 
 @implementation AsynchImageDownloader
 
@@ -32,9 +33,7 @@
       }
       default:{
          if( errorBlock){
-            NSError *error = [NSError errorWithDomain: @"TEST_DOMAIN"
-                                                 code:-1
-                                             userInfo:@{@"message": @"image size unknown"}];
+            NSError *error = [ErrorHelper errrorUsingCode: ERROR_CODE_DOWNLOAD_IMAGE_SIZE_UNKNOWN mesage: @"Image size unknown"];
             errorBlock( error);
          }
          return;

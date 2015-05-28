@@ -11,6 +11,8 @@
 #import "FlickrRestApi.h"
 #import "ImageBean.h"
 
+#import "ErrorHelper.h"
+
 @implementation FlickrProvider
 
 #pragma mark - protocol implementation
@@ -28,7 +30,14 @@
                   finish:(void (^)(NSArray *))finishBlock
                    error:(void (^)(NSError *))errorBlock{
    [FlickrRestApi photoListFilteredByTags: @[tag] finish:^(NSDictionary *jsonDict) {
-      
+      NSString *stat = jsonDict[@"stat"];
+      if( [stat isEqualToString:@"fail"]){
+         if( errorBlock){
+            NSError *error = [ErrorHelper errrorUsingCode: ERROR_CODE_FLICKR_API mesage: @"Problems with Flickr api call"];
+            errorBlock( error);
+            return;
+         }
+      }
       NSArray *imageList = [FlickrProvider parsePhotoListFlickrResponse:jsonDict];
       if( finishBlock != nil){
          finishBlock( imageList);
@@ -36,6 +45,7 @@
       
    } error:^(NSError *error) {
       if( errorBlock != nil){
+         //afnetworking error code here
          errorBlock( error);
       }
    }];
