@@ -40,9 +40,14 @@
 #pragma mark - lifecycle management
 -( void)viewDidLoad{
    [super viewDidLoad];
+   self.view.backgroundColor = [UIColor blackColor];
    self.title = self.imageBean.title;
    
    self.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
+-( void)viewDidAppear:(BOOL)animated{
+   [super viewDidAppear: animated];
    
    [self setupScrollView];
    [self.view addSubview: self.scrollView];
@@ -54,11 +59,8 @@
    //[self setupImageViewContraints];
    
    [self downloadImage];
-
-
-   /*
-    double tap inside/out
-    */
+   
+    //double tap inside/out
    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc]
                                                initWithTarget: self
                                                action: @selector(handleDoubleZoom)];
@@ -194,6 +196,10 @@
    NSDictionary *viewDictionary = @{ @"scrollView": self.scrollView,
                                      @"imageView": self.imageView};
    return viewDictionary;
+}
+
+-( void)dealloc{
+   
 }
 
 @end
