@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FlickrProvider.h"
+#import "ImageBean.h"
 
 @interface FlickrProvider( Test)
 + (NSMutableArray *)parsePhotoListFlickrResponse:(NSDictionary *)jsonDict;
@@ -77,6 +78,21 @@
    XCTAssert( imageList.count == 13);
 }
 
+- (void)testImageSmallFormatUrl {
+   NSDictionary *jsonDict = [self jsonDictFromTestDataKey: @"one_photo_list_json"];
+   NSArray *imageList = [FlickrProvider parsePhotoListFlickrResponse: jsonDict];
+   ImageBean *imageBean = imageList[ 0];
+   NSString *smallImageUrlAsString = imageBean.smallImageUrl.absoluteString;
+   XCTAssert( [smallImageUrlAsString isEqualToString:@"https://farm9.staticflickr.com/8843/17357040623_7d02652e18_m.jpg"]);
+}
+
+- (void)testImageLargeFormatUrl {
+   NSDictionary *jsonDict = [self jsonDictFromTestDataKey: @"one_photo_list_json"];
+   NSArray *imageList = [FlickrProvider parsePhotoListFlickrResponse: jsonDict];
+   ImageBean *imageBean = imageList[ 0];
+   NSString *largeImageUrlAsString = imageBean.largeImageUrl.absoluteString;
+   XCTAssert( [largeImageUrlAsString isEqualToString:@"https://farm9.staticflickr.com/8843/17357040623_7d02652e18_b.jpg"]);
+}
 
 
 @end
