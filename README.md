@@ -10,4 +10,5 @@ In file **flickr_test/configuration.plist** insert your flickr api key
 
 # Test
 There are some tests related to flickr json response parsing.
-Json data are located in **flickr-testTests/test_data.plist**
+
+Json data used in tests are located in **flickr-testTests/test_data.plist**
